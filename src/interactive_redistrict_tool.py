@@ -112,6 +112,8 @@ class InteractiveRedistrictingTool(QgsMapTool):
                 if self.current_district and old_district and self.current_district != old_district:
                     iface.messageBar().pushMessage('{}: {} -> {}'.format(meshblock['Meshblock'],old_district, self.current_district))
                     self.modified.add(meshblock.id())
+                    self.meshblock_layer.changeAttributeValue(meshblock.id(),18,self.current_district)
+                    self.meshblock_layer.triggerRepaint()
 
     def canvasPressEvent(self, event):
         if event.button() == Qt.MiddleButton:
