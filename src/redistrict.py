@@ -14,10 +14,15 @@ __copyright__ = 'Copyright 2018, The QGIS Project'
 __revision__ = '$Format:%H$'
 
 import os.path
-from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
-from qgis.PyQt.QtWidgets import QToolBar, QAction
+from qgis.PyQt.QtCore import (QSettings,
+                              QTranslator,
+                              QCoreApplication)
+from qgis.PyQt.QtWidgets import (QToolBar,
+                                 QAction)
+from qgis.core import QgsProject
 from .gui_utils import GuiUtils
 from .electorate_selection_dialog import ElectorateSelectionDialog
+from .interactive_redistrict_tool import InteractiveRedistrictingTool
 
 
 class LinzRedistrict:
@@ -73,6 +78,8 @@ class LinzRedistrict:
 
         self.interactive_redistrict_action = QAction(GuiUtils.get_icon(
             'interactive_redistrict.svg'), self.tr('Interactive Redistrict'))
+        self.interactive_redistrict_action.triggered.connect(
+            self.interactive_redistrict)
         self.redistricting_toolbar.addAction(
             self.interactive_redistrict_action)
 
@@ -97,3 +104,13 @@ class LinzRedistrict:
         """
         dlg = ElectorateSelectionDialog(self.iface.mainWindow())
         dlg.exec_()
+
+    def interactive_redistrict(self):
+        """
+        Interactively redistrict the currently selected meshblocks
+        """
+        meshblock_layer = QgsProject.instance().mapLayersByName('meshblock')[0]
+        district_layer = QgsProject.instance().mapLayersByName('general')[0]
+
+        self.tool = InteractiveRedistrictingTool(self.iface.mapCanvas(), meshblock_layer, district_layer)
+        self.iface.mapCanvas().setMapTool(self.tool)
