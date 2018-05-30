@@ -104,4 +104,5 @@ class CentroidDecoratorFactory(DecoratorFactory):
         :return: QgsMapCanvasItem to display on map if decorations
         are desired
         """
-        return CentroidDecorator(canvas, electorate_layer=self.electorate_layer, meshblock_layer=self.meshblock_layer, task=self.task)
+        #return CentroidDecorator(canvas, electorate_layer=self.electorate_layer, meshblock_layer=self.meshblock_layer, task=self.task)
+        return None
